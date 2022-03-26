@@ -4,7 +4,7 @@
 [![GitHub forks  ](https://img.shields.io/github/forks/LucunJi/brainscape-bene?style=flat-square    )](https://github.com/LucunJi/brainscape-bene)
 [![GitHub stars  ](https://img.shields.io/github/stars/LucunJi/brainscape-bene?style=flat-square    )](https://github.com/LucunJi/brainscape-bene)
 [![GitHub license](https://img.shields.io/github/license/LucunJi/brainscape-bene?style=flat-square  )](https://github.com/LucunJi/brainscape-bene/blob/master/LICENSE)
-[![Greasy Fork](https://img.shields.io/badge/-GreasyFork-960000?style=flat-square)]()
+[![Greasy Fork](https://img.shields.io/badge/-GreasyFork-960000?style=flat-square)](https://greasyfork.org/en/scripts/442099-brainscape-bene)
 
 Bene! Now with this script you can import/export your Brainscape decks from/into csv files without a Pro account.
 
