@@ -1,14 +1,16 @@
 // ==UserScript==
-// @name        Brainscape Bene
-// @namespace	https://www.brainscape.com/
-// @version     1
+// @name    Brainscape Bene
+// @author  LucunJi
+// @version 1.1.0
+// @match	https://www.brainscape.com/l/dashboard/*/decks*
+// @grant   none
+// @require https://code.jquery.com/jquery-3.6.0.min.js
+// @require https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js
+// @license MIT
 // @description	Import/export your Brainscape decks from/into csv files without a Pro account.
-// @author	    LucunJi
-// @match		https://www.brainscape.com/l/dashboard/*/decks*
-// @grant       none
-// @require     https://code.jquery.com/jquery-3.6.0.min.js
-// @require     https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js
-// @license     MIT
+// @namespace	https://github.com/LucunJi
+// @homepageURL https://github.com/LucunJi/brainscape-bene
+// @supportURL  https://github.com/LucunJi/brainscape-bene/issues
 // ==/UserScript==
 
 $(document).ready(function (event) {
@@ -21,17 +23,21 @@ function tryReplaceBtn(event) {
         var exportBtn = $('.export-deck.pro-required');
         if (importBtn.length > 0) {
             importBtn = importBtn.get(0);
-            var newImportBtn = importBtn.cloneNode(true);
-            importBtn.replaceWith(newImportBtn);
-            newImportBtn.classList.remove('pro-required');
-            newImportBtn.addEventListener('click', importCSV);
+            importBtn.replaceWith(importBtn = importBtn.cloneNode(true));
+            importBtn.classList.remove('pro-required');
+            importBtn.addEventListener('click', event => {
+                importCSV(event);
+                event.stopImmediatePropagation();
+            });
         }
         if (exportBtn.length > 0) {
             exportBtn = exportBtn.get(0);
-            var newExportBtn = exportBtn.cloneNode(true);
-            exportBtn.replaceWith(newExportBtn);
-            newExportBtn.classList.remove('pro-required');
-            newExportBtn.addEventListener('click', exportCSV);
+            exportBtn.replaceWith(exportBtn = exportBtn.cloneNode(true));
+            exportBtn.classList.remove('pro-required');
+            exportBtn.addEventListener('click', event => {
+                exportCSV(event);
+                event.stopImmediatePropagation();
+            });
         }
     }, 50);
 
@@ -39,13 +45,22 @@ function tryReplaceBtn(event) {
 }
 
 function importCSV(event) {
+    // get deck title
     var packId = $(event.target).parents('.pack-decks-section[data-pack-id]').attr('data-pack-id');
     var deckName = prompt('Enter the title of your new deck below');
+    if (deckName === null) return;
+    if (deckName.trim() === "") {
+        alert('The title cannot be an empty string');
+        return;
+    }
+
+    // get input file
     var fileSelector = document.createElement('input');
     fileSelector.type = 'file';
     fileSelector.accept = '.csv';
-
     fileSelector.onchange = function (event) {
+        if (event.target.files.length < 1) return;
+
         var reader = new FileReader();
         reader.onload = function () {
             var parsedCSV = Papa.parse(reader.result);
@@ -84,8 +99,6 @@ function importCSV(event) {
     };
 
     fileSelector.click();
-
-    event.stopImmediatePropagation();
 }
 
 function exportCSV(event) {
@@ -97,13 +110,13 @@ function exportCSV(event) {
     })
         .then(res => res.json())
         .then(res => {
-            var csvData = res['cards'].map(card => [card['question'], card['answer']]);
+            var csvData = res['cards'].map(card =>
+                [card['question'], card['answer'], card['questionHtml'], card['answerHtml'], card['level']]
+            );
             var fileDownloader = document.createElement('a');
             fileDownloader.setAttribute('href',
                 'data:text/plain;charset=utf-8, ' + encodeURIComponent(Papa.unparse(csvData)));
             fileDownloader.setAttribute('download', res['deck']['name'] + '.csv');
             fileDownloader.click();
         })
-
-    event.stopImmediatePropagation();
 }
