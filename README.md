@@ -1,3 +1,5 @@
+# Currently, people can export/import their own deck from/to Brainscape, so this script is obsolete.
+
 # Brainscape Bene!
 
 [![GitHub issues ](https://img.shields.io/github/issues/LucunJi/brainscape-bene?style=flat-square   )](https://github.com/LucunJi/brainscape-bene)
